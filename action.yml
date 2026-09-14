@@ -57,8 +57,7 @@ runs:
         -DBUILD_SHARED_LIBS=ON \
         -DCMAKE_C_COMPILER=${{ env.MINGW_CC }} \
         -DCMAKE_CXX_COMPILER=${{ env.MINGW_CXX }} \
-        -Wno-policy \
-        .
+        -Wno-policy
 
       make -f Makefile platform=win
 
