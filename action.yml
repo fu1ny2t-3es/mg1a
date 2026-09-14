@@ -51,15 +51,15 @@ runs:
       CXX: ccache ${{ env.MINGW_CXX }}
     shell: pwsh
     run: |
-	  cmake \
+      cmake \
         -G "MinGW Makefiles"
-	    -DCMAKE_BUILD_TYPE=Release -DLIBMGBA_ONLY=ON -DBUILD_LIBRETRO=ON \
-	    -DBUILD_SHARED_LIBS=ON \
-	    -DCMAKE_C_COMPILER="D:/mingw-x64/winlibs-x86_64-posix-seh-gcc/mingw64/bin/gcc.exe" \
-	    -DCMAKE_CXX_COMPILER="D:/mingw-x64/winlibs-x86_64-posix-seh-gcc/mingw64/bin/g++.exe" \
-	    -DCMAKE_MAKE_PROGRAM="D:/mingw-x64/winlibs-x86_64-posix-seh-gcc/mingw64/bin/mingw32-make.exe" \
-	    -Wno-policy \
-	    .
+        -DCMAKE_BUILD_TYPE=Release -DLIBMGBA_ONLY=ON -DBUILD_LIBRETRO=ON \
+        -DBUILD_SHARED_LIBS=ON \
+        -DCMAKE_C_COMPILER="D:/mingw-x64/winlibs-x86_64-posix-seh-gcc/mingw64/bin/gcc.exe" \
+        -DCMAKE_CXX_COMPILER="D:/mingw-x64/winlibs-x86_64-posix-seh-gcc/mingw64/bin/g++.exe" \
+        -DCMAKE_MAKE_PROGRAM="D:/mingw-x64/winlibs-x86_64-posix-seh-gcc/mingw64/bin/mingw32-make.exe" \
+        -Wno-policy \
+        .
 
       make -f Makefile platform=win
 
