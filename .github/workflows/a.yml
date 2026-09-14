@@ -17,7 +17,7 @@ jobs:
 
     steps:
 
-    - uses: fu1ny2t-3es/te1pl2te@build
+    - uses: fu1ny2t-3es/mg1a@build
       with:
         branch: custom
         arch: ${{ matrix.arch }}
@@ -38,7 +38,7 @@ jobs:
 
     steps:
 
-    - uses: fu1ny2t-3es/te1pl2te@build
+    - uses: fu1ny2t-3es/mg1a@build
       with:
         branch: custom
         arch: ${{ matrix.arch }}
