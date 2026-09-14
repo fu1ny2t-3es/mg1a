@@ -55,9 +55,8 @@ runs:
         -G "MinGW Makefiles"
         -DCMAKE_BUILD_TYPE=Release -DLIBMGBA_ONLY=ON -DBUILD_LIBRETRO=ON \
         -DBUILD_SHARED_LIBS=ON \
-        -DCMAKE_C_COMPILER="D:/mingw-x64/winlibs-x86_64-posix-seh-gcc/mingw64/bin/gcc.exe" \
-        -DCMAKE_CXX_COMPILER="D:/mingw-x64/winlibs-x86_64-posix-seh-gcc/mingw64/bin/g++.exe" \
-        -DCMAKE_MAKE_PROGRAM="D:/mingw-x64/winlibs-x86_64-posix-seh-gcc/mingw64/bin/mingw32-make.exe" \
+        -DCMAKE_C_COMPILER=${{ env.MINGW_CC }} \
+        -DCMAKE_CXX_COMPILER=${{ env.MINGW_CXX }} \
         -Wno-policy \
         .
 
