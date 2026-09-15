@@ -17,6 +17,8 @@
 
 mLOG_DEFINE_CATEGORY(GBA_AUDIO, "GBA Audio", "gba.audio");
 
+#define SOUNDBIAS_FREQ_262KHZ  (3 << 14) // 6-bit
+
 const unsigned GBA_AUDIO_SAMPLES = 2048;
 const int GBA_AUDIO_VOLUME_MAX = 0x100;
 
@@ -43,7 +45,7 @@ void GBAAudioInit(struct GBAAudio* audio, size_t samples) {
 	audio->forceDisableChA = false;
 	audio->forceDisableChB = false;
 	audio->masterVolume = GBA_AUDIO_VOLUME_MAX;
-	audio->sampleInterval = GBA_ARM7TDMI_FREQUENCY / 0x8000;
+	audio->sampleInterval = GBA_ARM7TDMI_FREQUENCY / 0x8000 / 8;
 }
 
 void GBAAudioReset(struct GBAAudio* audio) {
@@ -69,7 +71,7 @@ void GBAAudioReset(struct GBAAudio* audio) {
 		audio->chA.samples[i] = 0;
 		audio->chB.samples[i] = 0;
 	}
-	audio->soundbias = 0x200;
+	audio->soundbias = 0x200 | SOUNDBIAS_FREQ_262KHZ;
 	audio->volume = 0;
 	audio->volumeChA = false;
 	audio->volumeChB = false;
@@ -82,8 +84,8 @@ void GBAAudioReset(struct GBAAudio* audio) {
 	audio->chBLeft = false;
 	audio->chBTimer = false;
 	audio->enable = false;
-	if (audio->sampleInterval != GBA_ARM7TDMI_FREQUENCY / 0x8000) {
-		audio->sampleInterval = GBA_ARM7TDMI_FREQUENCY / 0x8000;
+	if (audio->sampleInterval != GBA_ARM7TDMI_FREQUENCY / 0x8000 / 8) {  // 262K
+		audio->sampleInterval = GBA_ARM7TDMI_FREQUENCY / 0x8000 / 8;
 		if (audio->p->stream && audio->p->stream->audioRateChanged) {
 			audio->p->stream->audioRateChanged(audio->p->stream, GBA_ARM7TDMI_FREQUENCY / audio->sampleInterval);
 		}
@@ -106,14 +108,6 @@ void GBAAudioScheduleFifoDma(struct GBAAudio* audio, int number, struct GBADMA* 
 	info->reg = GBADMARegisterSetDestControl(info->reg, GBA_DMA_FIXED);
 	info->reg = GBADMARegisterSetWidth(info->reg, 1);
 	info->destOffset = 0;
-	// The width was just forced to 32-bit, but sourceOffset was cached at CNT_HI
-	// write time from the width the game programmed. Rescale it, keeping the
-	// direction the source control selected.
-	if (info->sourceOffset > 0) {
-		info->sourceOffset = 4;
-	} else if (info->sourceOffset < 0) {
-		info->sourceOffset = -4;
-	}
 	switch (info->dest) {
 	case GBA_BASE_IO | GBA_REG_FIFO_A_LO:
 		audio->chA.dmaSource = number;
@@ -235,6 +229,7 @@ void GBAAudioWriteSOUNDCNT_X(struct GBAAudio* audio, uint16_t value) {
 void GBAAudioWriteSOUNDBIAS(struct GBAAudio* audio, uint16_t value) {
 	int32_t timestamp = mTimingCurrentTime(&audio->p->timing);
 	GBAAudioSample(audio, timestamp);
+	value |= SOUNDBIAS_FREQ_262KHZ;
 	audio->soundbias = value;
 	int32_t oldSampleInterval = audio->sampleInterval;
 	audio->sampleInterval = 0x200 >> GBARegisterSOUNDBIASGetResolution(value);
