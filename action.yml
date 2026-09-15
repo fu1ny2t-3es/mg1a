@@ -51,12 +51,12 @@ runs:
       CXX: ccache ${{ env.MINGW_CXX }}
     shell: pwsh
     run: |
-      cmake \
-        -G "MinGW Makefiles" \
-        -DCMAKE_BUILD_TYPE=Release -DLIBMGBA_ONLY=ON -DBUILD_LIBRETRO=ON \
-        -DBUILD_SHARED_LIBS=ON \
-        -DCMAKE_C_COMPILER=${{ env.MINGW_CC }} \
-        -DCMAKE_CXX_COMPILER=${{ env.MINGW_CXX }} \
+      cmake `
+        -G "MinGW Makefiles" `
+        -DCMAKE_BUILD_TYPE=Release -DLIBMGBA_ONLY=ON -DBUILD_LIBRETRO=ON `
+        -DBUILD_SHARED_LIBS=ON `
+        -DCMAKE_C_COMPILER=${{ env.MINGW_CC }} `
+        -DCMAKE_CXX_COMPILER=${{ env.MINGW_CXX }} `
         -Wno-policy
 
       make -f Makefile platform=win
