@@ -59,7 +59,7 @@ runs:
         -DCMAKE_CXX_COMPILER=${{ env.MINGW_CXX }} `
         -Wno-policy
 
-      make -f Makefile platform=win
+      make -f Makefile mgba_libretro
 
 
 
