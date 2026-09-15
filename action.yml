@@ -70,13 +70,18 @@ runs:
       CXX: ccache g++
     shell: bash
     run: |
-      make platform="unix"
+      cmake `
+        -DCMAKE_BUILD_TYPE=Release -DLIBMGBA_ONLY=ON -DBUILD_LIBRETRO=ON `
+        -DBUILD_SHARED_LIBS=ON `
+        -Wno-policy
+        
+      make -f Makefile mgba_libretro
 
 
 
   - uses: actions/upload-artifact@main
     with:
-      name: program_${{ inputs.arch }}
+      name: mgba_${{ inputs.arch }}
       path: |
         ${{ github.workspace }}/**.exe
         ${{ github.workspace }}/**.dll
