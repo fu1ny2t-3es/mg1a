@@ -1,0 +1,5 @@
+CMakeLists - libretro building
+
+src/gba/audio.c - 256K internal forced
+
+include/mgba-util/image.h - 32-bit color
